@@ -1,0 +1,29 @@
+.container {
+	width: 200px;
+	height: 300px;
+	border: 2px dashed #ccc;
+	float: left;
+	margin-right: 20px;
+	padding: 10px;
+}
+
+.item {
+	background-color: #f0f0f0;
+	border: 1px solid #ccc;
+	padding: 5px;
+	margin-bottom: 5px;
+}
+
+.item.dragging {
+	opacity: 0.5;
+}
+
+.item-container {
+	margin-bottom: 5px;
+}
+
+.message-container {
+	padding: 5px;
+	background-color: #f0f0f0;
+	border: 1px solid #ccc;
+}
