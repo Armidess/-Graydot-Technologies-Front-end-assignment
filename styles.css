@@ -2,9 +2,14 @@
 	display: flex;
 }
 
+.container {
+	display: flex;
+}
+
 .container-left,
 .container-right {
 	flex-grow: 1;
+	max-width: 300px;
 	padding: 10px;
 }
 
