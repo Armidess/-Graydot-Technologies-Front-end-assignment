@@ -1,33 +1,21 @@
 document.addEventListener("DOMContentLoaded", function () {
-	const container1 = document.getElementById("container1");
+	const container1 = document.querySelector(".container-left");
 	const container2 = document.getElementById("container2");
 	const resetButton = document.getElementById("resetButton");
 
-	// Add event listeners to the items in container1
-	const items = container1.getElementsByClassName("item");
-	for (const item of items) {
-		item.addEventListener("dragstart", dragStart);
-		item.addEventListener("dragend", dragEnd);
-	}
-
-	// Add event listeners to container2
+	container1.addEventListener("dragstart", dragStart);
 	container2.addEventListener("dragover", dragOver);
 	container2.addEventListener("dragenter", dragEnter);
 	container2.addEventListener("dragleave", dragLeave);
 	container2.addEventListener("drop", drop);
 
-	// Reset button event listener
 	resetButton.addEventListener("click", resetContainers);
 
 	let draggedItem = null;
 
-	function dragStart() {
-		draggedItem = this;
-		this.classList.add("dragging");
-	}
-
-	function dragEnd() {
-		this.classList.remove("dragging");
+	function dragStart(event) {
+		draggedItem = event.target;
+		event.target.classList.add("dragging");
 	}
 
 	function dragOver(e) {
@@ -46,9 +34,11 @@ document.addEventListener("DOMContentLoaded", function () {
 	function drop() {
 		this.classList.remove("drag-over");
 		const newItem = draggedItem.cloneNode(true);
+		newItem.classList.remove("item");
+		newItem.classList.remove("dragging");
+		newItem.removeAttribute("draggable");
 		const successMessage = "Item dropped successfully!";
 
-		// Remove any existing message container
 		const existingMessageContainer =
 			document.getElementById("messageContainer");
 		if (existingMessageContainer) {
@@ -60,12 +50,18 @@ document.addEventListener("DOMContentLoaded", function () {
 
 		const itemContainer = document.createElement("div");
 		itemContainer.classList.add("item-container");
+
+		if (draggedItem.classList.contains("image-item")) {
+			newItem.classList.remove("image-item");
+		}
+
 		itemContainer.appendChild(newItem);
 
 		this.appendChild(itemContainer);
 		this.appendChild(messageContainer);
-		attachDragListeners(newItem);
-		draggedItem.parentNode.removeChild(draggedItem);
+		draggedItem.classList.add("dropped");
+		draggedItem.removeAttribute("draggable");
+		draggedItem.style.display = "none";
 		draggedItem = null;
 	}
 
@@ -78,21 +74,22 @@ document.addEventListener("DOMContentLoaded", function () {
 
 	function resetContainers() {
 		container1.innerHTML = `
-            <div class="item" draggable="true">Item 1</div>
-            <div class="item" draggable="true">Item 2</div>
-            <div class="item" draggable="true">Item 3</div>
+		<div class="item" draggable="true">
+			<p>Text 1</p>
+		</div>
+		<div class="item" draggable="true">
+			<p>Text 2</p>
+		</div>
+		<div class="image-item" draggable="true">
+			<img src="img1.jpg" alt="Image 1" draggable="false" />
+		</div>
+		<div class="image-item" draggable="true">
+			<img src="img2.jpg" alt="Image 2" draggable="false" />
+		</div>
         `;
-		container2.innerHTML = "<p>Drop items here</p>";
 
-		// Re-attach event listeners to the items in container1
-		const items = container1.getElementsByClassName("item");
-		for (const item of items) {
-			item.addEventListener("dragstart", dragStart);
-			item.addEventListener("dragend", dragEnd);
-		}
-	}
-	function attachDragListeners(item) {
-		item.addEventListener("dragstart", dragStart);
-		item.addEventListener("dragend", dragEnd);
+		container2.innerHTML = `
+            <p>Drop items here</p>
+        `;
 	}
 });
